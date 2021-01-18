@@ -1,21 +1,21 @@
 using System.Diagnostics;
 
-public enum CellKind
+public enum TileKind
 {
     TERRAIN,
     WALL
 }
 
 [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-internal class Cell
+internal class Tile
 {
-    public Cell()
+    public Tile()
     {
-        Kind = CellKind.TERRAIN;
+        Kind = TileKind.TERRAIN;
     }
 
 
-    public CellKind Kind;
+    public TileKind Kind;
 
 
 
