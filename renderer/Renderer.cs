@@ -16,10 +16,15 @@ namespace Rendering
     internal class Renderer
     {
         public List<IRenderModel> Layers;
-        public Renderer()
+
+
+        public Renderer(OrtoCamera camera)
         {
+            Camera = camera;
             Layers = new();
         }
+
+        public OrtoCamera Camera { get; }
 
         public void Add(IRenderModel model)
         {
@@ -33,12 +38,20 @@ namespace Rendering
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.WHITE);
 
-            Raylib.DrawText("Hello, world!", 12, 12, 20, Color.BLACK);
+
+
+
             Raylib.DrawCircle(100, 100, 10, Color.DARKGREEN);
+
         }
 
         internal void End()
         {
+            Raylib.DrawText(String.Format("Camera : {0} {1} {2} {3}", Camera.Center.X - 0.5 * Camera.Viewport.W,
+                         Camera.Center.X + 0.5 * Camera.Viewport.W,
+                        Camera.Center.Y - 0.5 * Camera.Viewport.H,
+                         Camera.Center.Y + 0.5 * Camera.Viewport.H
+                        ), 12, 12, 20, Color.BLACK);
             Raylib.EndDrawing();
         }
 
@@ -49,18 +62,15 @@ namespace Rendering
 
         internal void Render(Hero hero)
         {
-            // (int x, int y) screenPos = CellToScreen(hero.Position.X, hero.Position.Y);
-            // Raylib.DrawCircle(screenPos.x, screenPos.y, 10, Color.RED);
-            // Raylib.DrawTexture(tx, 200, 200, Color.RED);
+
         }
 
         internal void Render()
         {
             foreach (var model in this.Layers)
             {
-                model.Render();
+                model.Render(Camera);
             }
         }
     }
-
 }

@@ -2,7 +2,7 @@ namespace Rendering
 {
     internal interface IRenderModel
     {
-        void Render();
+        void Render(OrtoCamera camera);
     }
 
 }

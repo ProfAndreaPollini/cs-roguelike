@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Runtime.CompilerServices;
+using System.Numerics;
 using System;
 using Raylib_cs;
 using static Raylib_cs.KeyboardKey;
@@ -14,15 +15,22 @@ const int Y_CELLS = Height / CELL_SIZE;
 Console.WriteLine("Hello World!");
 Raylib.InitWindow(Width, Height, "Hello World");
 
+
+
+
 Map map = new(X_CELLS, Y_CELLS);
 
 
-Renderer renderer = new();
 
 Hero hero = new();
 Random rng = new();
 hero.Position.X = rng.Next() % X_CELLS;
 hero.Position.Y = rng.Next() % Y_CELLS;
+
+OrtoCamera camera = new();
+camera.Center = hero.Position;
+camera.Viewport = (X_CELLS / 2, Y_CELLS / 2);
+Renderer renderer = new(camera);
 
 
 renderer.Add(new HeroRenderModel(hero));
@@ -67,6 +75,9 @@ while (!Raylib.WindowShouldClose())
         dx += new Vector2(-1, 0);
     }
 
+
+
+
     Vector2 desired_position = hero.Position + dx;
     if (IsPositionInsideMap(desired_position, 0, X_CELLS, 0, Y_CELLS))
     {
@@ -75,45 +86,23 @@ while (!Raylib.WindowShouldClose())
         if (CanMoveToCell(desiredCell))
         {
             hero.Position = desired_position;
+            camera.Center = hero.Position;
         }
     }
 
-    for (int i = 0; i < Width / CELL_SIZE; i++)
-    {
-        Raylib.DrawLine(i * CELL_SIZE, 0, i * CELL_SIZE, Raylib.GetScreenHeight(), Color.BROWN);
-    }
-    for (int j = 0; j < Height / CELL_SIZE; j++)
-    {
-        Raylib.DrawLine(0, j * CELL_SIZE, Raylib.GetScreenWidth(), j * CELL_SIZE, Color.BROWN);
-    }
-    for (int i = 0; i < Y_CELLS; i++)
-    {
-        for (int j = 0; j < X_CELLS; j++)
-        {
-            Tile c = map.CellAt(new Vector2(j, i));
-            switch (c.Kind)
-            {
-                case TileKind.TERRAIN:
-                    //Console.WriteLine(i + " " + j);
-                    (int x, int y) terrainPos = CellToScreen(j, i);
-                    terrainPos.x -= (int)(0.5 * CELL_SIZE);
-                    terrainPos.y -= (int)(0.5 * CELL_SIZE);
-                    Raylib.DrawRectangle(terrainPos.x, terrainPos.y, terrainPos.x + CELL_SIZE, terrainPos.y + CELL_SIZE, Color.LIME);
-                    break;
-                case TileKind.WALL:
-                    //Console.WriteLine(i + " " + j);
-                    (int x, int y) wallPos = CellToScreen(j, i);
-                    wallPos.x -= (int)(0.5 * CELL_SIZE);
-                    wallPos.y -= (int)(0.5 * CELL_SIZE);
-                    Raylib.DrawRectangle(wallPos.x, wallPos.y, wallPos.x + CELL_SIZE, wallPos.y + CELL_SIZE, Color.GOLD);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+    // for (int i = 0; i < Width / CELL_SIZE; i++)
+    // {
+    //     Raylib.DrawLine(i * CELL_SIZE, 0, i * CELL_SIZE, Raylib.GetScreenHeight(), Color.BROWN);
+    // }
+    // for (int j = 0; j < Height / CELL_SIZE; j++)
+    // {
+    //     Raylib.DrawLine(0, j * CELL_SIZE, Raylib.GetScreenWidth(), j * CELL_SIZE, Color.BROWN);
+    // }
 
 
+    (int x, int y) screenPos = CellToScreen(hero.Position.X, hero.Position.Y);
+    Raylib.DrawCircle(screenPos.x, screenPos.y, 10, Color.RED);
+    Raylib.DrawTexture(tx, 200, 200, Color.RED);
 
     renderer.Render();
     renderer.End();

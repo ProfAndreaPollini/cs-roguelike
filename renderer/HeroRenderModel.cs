@@ -9,9 +9,9 @@ namespace Rendering
 
         public Hero Hero { get; }
 
-        public override void Render()
+        public override void Render(OrtoCamera camera)
         {
-            base.Render();
+
         }
     }
 }
