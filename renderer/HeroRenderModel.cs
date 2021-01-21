@@ -1,3 +1,4 @@
+using System.Numerics;
 using Raylib_cs;
 
 namespace Rendering
@@ -17,17 +18,13 @@ namespace Rendering
         public Hero Hero { get; }
         public int CELL_SIZE { get; }
 
-        private (int, int) CellToScreen(float x, float y)
-        {
-            return (
-                (int)(x * CELL_SIZE + 0.5 * CELL_SIZE),
-                (int)(y * CELL_SIZE + 0.5 * CELL_SIZE)
-            );
-        }
         public override void Render(OrtoCamera camera)
         {
-            (int x, int y) screenPos = CellToScreen(Hero.Position.X, Hero.Position.Y);
-            Raylib.DrawCircle(screenPos.x, screenPos.y, 10, Color.RED);
+            var cellSize = CELL_SIZE * camera.Zoom;
+            var dx = new Vector2(0.5f * cellSize, 0.5f * cellSize);
+
+            var screenPos = (Hero.Position - new Vector2(camera.Left, camera.Top)) * cellSize + dx;
+            Raylib.DrawCircle((int)screenPos.X, (int)screenPos.Y, 0.5f * cellSize, Color.RED);
             //Raylib.DrawTexture(tx, 200, 200, Color.RED);
         }
     }

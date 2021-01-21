@@ -18,23 +18,23 @@ Raylib.InitWindow(Width, Height, "Hello World");
 
 
 
-Map map = new(1000, 1000);
+Map map = new(100, 100);
 
 
 
 Hero hero = new();
 Random rng = new();
-hero.Position.X = rng.Next() % X_CELLS;
-hero.Position.Y = rng.Next() % Y_CELLS;
+hero.Position.X = 20;
+hero.Position.Y = 20;
 
-OrtoCamera camera = new(10, 10, 20, 5);
-camera.Center = new(hero.Position.X * CELL_SIZE, hero.Position.Y * CELL_SIZE);
-camera.Viewport = (CELL_SIZE * X_CELLS / 2, CELL_SIZE * Y_CELLS / 2);
+OrtoCamera camera = new(10, 10, 5, 5);
+camera.CenterTo((int)hero.Position.X, (int)hero.Position.Y);
+//camera.Viewport = (CELL_SIZE * X_CELLS / 2, CELL_SIZE * Y_CELLS / 2);
 Renderer renderer = new(camera);
 
 
-// renderer.Add(new MapRenderModel(map));
-// renderer.Add(new HeroRenderModel(hero, CELL_SIZE));
+renderer.Add(new MapRenderModel(map, 16));
+renderer.Add(new HeroRenderModel(hero, 16));
 
 
 // (int, int) CellToScreen(float x, float y)
@@ -64,23 +64,23 @@ while (!Raylib.WindowShouldClose())
 
     if (Raylib.IsKeyPressed(KEY_W))
     {
-        // dx += new Vector2(0, -1);
-        camera.Move(0, -1);
+        dx += new Vector2(0, -1);
+        //camera.Move(0, -1);
     }
     if (Raylib.IsKeyPressed(KEY_S))
     {
-        // dx += new Vector2(0, 1);
-        camera.Move(0, 1);
+        dx += new Vector2(0, 1);
+        //camera.Move(0, 1);
     }
     if (Raylib.IsKeyPressed(KEY_D))
     {
-        //dx += new Vector2(1, 0);
-        camera.Move(1, 0);
+        dx += new Vector2(1, 0);
+        //camera.Move(1, 0);
     }
     if (Raylib.IsKeyPressed(KEY_A))
     {
-        //dx += new Vector2(-1, 0);
-        camera.Move(-1, 0);
+        dx += new Vector2(-1, 0);
+        //camera.Move(-1, 0);
     }
     if (Raylib.IsKeyPressed(KEY_PAGE_UP))
     {
@@ -91,25 +91,27 @@ while (!Raylib.WindowShouldClose())
         camera.Zoom *= 0.95f;
     }
 
-    for (int y = camera.Top; y < camera.Top + camera.H; y++)
-    {
-        for (int x = camera.Left; x < camera.Left + camera.W; x++)
-        {
-            Tile tile = map.GetTile(y, x);
-            //Console.WriteLine($"({x * 16},{y * 16})");
-            int tileSize = (int)(25 * camera.Zoom);
-            switch (tile.Kind)
-            {
-                case TileKind.WALL:
-                    Raylib.DrawRectangle((x - camera.Left) * tileSize, (y - camera.Top) * tileSize, tileSize, tileSize, Color.GRAY);
-                    break;
-                case TileKind.TERRAIN:
-                    Raylib.DrawRectangle((x - camera.Left) * tileSize, (y - camera.Top) * tileSize, tileSize, tileSize, Color.LIME);
-                    break;
-            }
-            Raylib.DrawText($"{x},{y}", (x - camera.Left) * tileSize, (y - camera.Top) * tileSize, 6, Color.BLACK);
-        }
-    }
+    hero.Position += dx;
+    camera.CenterTo((int)hero.Position.X, (int)hero.Position.Y);
+    // for (int y = camera.Top; y < camera.Top + camera.H; y++)
+    // {
+    //     for (int x = camera.Left; x < camera.Left + camera.W; x++)
+    //     {
+    //         Tile tile = map.GetTile(y, x);
+    //         //Console.WriteLine($"({x * 16},{y * 16})");
+    //         int tileSize = (int)(25 * camera.Zoom);
+    //         switch (tile.Kind)
+    //         {
+    //             case TileKind.WALL:
+    //                 Raylib.DrawRectangle((x - camera.Left) * tileSize, (y - camera.Top) * tileSize, tileSize, tileSize, Color.GRAY);
+    //                 break;
+    //             case TileKind.TERRAIN:
+    //                 Raylib.DrawRectangle((x - camera.Left) * tileSize, (y - camera.Top) * tileSize, tileSize, tileSize, Color.LIME);
+    //                 break;
+    //         }
+    //         Raylib.DrawText($"{x},{y}", (x - camera.Left) * tileSize, (y - camera.Top) * tileSize, 6, Color.BLACK);
+    //     }
+    // }
 
 
 

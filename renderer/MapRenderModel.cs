@@ -6,18 +6,36 @@ namespace Rendering
 {
     internal class MapRenderModel : RenderModel
     {
-        public MapRenderModel(Map map)
+        public MapRenderModel(Map map, int TileSize)
         {
             Map = map;
-
+            this.TileSize = TileSize;
         }
 
         public Map Map { get; }
-
-
+        public int TileSize { get; }
 
         public override void Render(OrtoCamera camera)
         {
+            for (int y = camera.Top; y < camera.Top + camera.H; y++)
+            {
+                for (int x = camera.Left; x < camera.Left + camera.W; x++)
+                {
+                    Tile tile = Map.GetTile(y, x);
+                    //Console.WriteLine($"({x * 16},{y * 16})");
+                    int tileSize = (int)(TileSize * camera.Zoom);
+                    switch (tile.Kind)
+                    {
+                        case TileKind.WALL:
+                            Raylib.DrawRectangle((x - camera.Left) * tileSize, (y - camera.Top) * tileSize, tileSize, tileSize, Color.GRAY);
+                            break;
+                        case TileKind.TERRAIN:
+                            Raylib.DrawRectangle((x - camera.Left) * tileSize, (y - camera.Top) * tileSize, tileSize, tileSize, Color.LIME);
+                            break;
+                    }
+                    Raylib.DrawText($"{x},{y}", (x - camera.Left) * tileSize, (y - camera.Top) * tileSize, 6, Color.BLACK);
+                }
+            }
             // for (int i = 0; i < camera.Viewport.H; i++)
             // {
             //     for (int j = 0; j < camera.Viewport.W; j++)

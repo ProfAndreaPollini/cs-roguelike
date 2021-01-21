@@ -48,7 +48,7 @@ namespace Rendering
         internal void End()
         {
             Raylib.DrawText(String.Format("Camera : {0} {1} {2} {3}", Camera.Center.X,
-                        Camera.Center.Y, Camera.Viewport.W, Camera.Viewport.H
+                        Camera.Center.Y, Camera.W, Camera.H
                         ), 12, 12, 20, Color.BLACK);
             Raylib.EndDrawing();
         }

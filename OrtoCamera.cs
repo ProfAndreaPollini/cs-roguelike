@@ -2,8 +2,8 @@ using System;
 using System.Numerics;
 internal class OrtoCamera
 {
-    public Vector2 Center;
-    public (int W, int H) Viewport;
+    public Vector2 Center { get; private set; }
+    //public (int W, int H) Viewport;
     public OrtoCamera(int top, int left, int W, int H)
     {
         Top = top;
@@ -11,6 +11,12 @@ internal class OrtoCamera
         this.W = W;
         this.H = H;
         this.Zoom = 1;
+    }
+
+    public void CenterTo(int cx, int cy)
+    {
+        Left = cx - (int)(0.5f * W);
+        Top = cy - (int)(0.5f * H);
     }
 
     public int Top { get; private set; }
