@@ -47,23 +47,12 @@ namespace Rendering
 
         internal void End()
         {
-            Raylib.DrawText(String.Format("Camera : {0} {1} {2} {3}", Camera.Center.X - 0.5 * Camera.Viewport.W,
-                         Camera.Center.X + 0.5 * Camera.Viewport.W,
-                        Camera.Center.Y - 0.5 * Camera.Viewport.H,
-                         Camera.Center.Y + 0.5 * Camera.Viewport.H
+            Raylib.DrawText(String.Format("Camera : {0} {1} {2} {3}", Camera.Center.X,
+                        Camera.Center.Y, Camera.Viewport.W, Camera.Viewport.H
                         ), 12, 12, 20, Color.BLACK);
             Raylib.EndDrawing();
         }
 
-        internal void Render(Map map)
-        {
-
-        }
-
-        internal void Render(Hero hero)
-        {
-
-        }
 
         internal void Render()
         {
